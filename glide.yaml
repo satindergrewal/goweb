@@ -1,0 +1,6 @@
+package: web
+import:
+- package: github.com/kataras/iris
+  subpackages:
+  - middleware/logger
+  - middleware/recover
