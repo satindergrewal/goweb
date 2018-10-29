@@ -161,7 +161,8 @@ func main() {
 		ctx.Writef("POST / -- calculator helper\n")
 	})
 
-	app.Run(iris.Addr(":8080"), iris.WithCharset("UTF-8"), iris.WithoutVersionChecker, iris.WithoutServerError(iris.ErrServerClosed))
+	app.Run(iris.Addr(":8080"), iris.WithCharset("UTF-8"), iris.WithoutServerError(iris.ErrServerClosed))
+	//app.Run(iris.Addr(":8080"), iris.WithCharset("UTF-8"), iris.WithoutVersionChecker, iris.WithoutServerError(iris.ErrServerClosed))
 }
 
 func info(ctx iris.Context) {
