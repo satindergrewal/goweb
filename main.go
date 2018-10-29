@@ -3,13 +3,18 @@ package main
 import (
 	"fmt"
 	"github.com/kataras/iris"
-	//"strconv"
+	"strconv"
 
 	"github.com/kataras/iris/middleware/logger"
 	"github.com/kataras/iris/middleware/recover"
 )
 
-func add(val1 int64, val2 int64) int64 {
+type Add struct {
+	Num1 int `json:"num1"`
+	Num2 int `json:"num2"`
+}
+
+func add(val1 int, val2 int) int {
 	result_val := val1 + val2
 	//fmt.Println(result_val)
 	return result_val
@@ -125,13 +130,36 @@ func main() {
 		ctx.JSON(doe)
 	})
 
-	/*calcRoutes := app.Party("/maths")
-	calcRoutes.Post("/add", func(ctx iris.Context) {
+
+	mathsRoutes := app.Party("/maths")
+	// GET: http://localhost:8080/maths/help
+	mathsRoutes.Get("/help", func(ctx iris.Context) {
+		ctx.Writef("POST / -- mathematics cool as!\n")
+	})
+
+	// GET: http://localhost:8080/maths/add
+	mathsRoutes.Post("/add", func(ctx iris.Context) {
 		//num1, _ := ctx.Params().GetInt("num1")
-		num1, num2 := ctx.PostValue("num1"), ctx.PostValue("num2")
+		//num1 := ctx.PostValue("num1")
+		num1, err := strconv.Atoi(ctx.PostValue("num1"))
+		if err != nil {
+			fmt.Println(err)
+		}
+		//num2 := ctx.PostValue("num2")
+		num2, err := strconv.Atoi(ctx.PostValue("num2"))
+		if err != nil {
+			fmt.Println(err)
+		}
 		math_res := add(num1, num2)
-		ctx.Writef("Addition of %s + %s is:", num1, num2)
-	})*/
+		ctx.Writef("Addition of %d + %d is: %d", num1, num2, math_res)
+		//ctx.Writef("got number: %T and %T", num1, num2)
+	})
+
+	calcRoutes := app.Party("/calc")
+	// GET: http://localhost:8080/calc/help
+	calcRoutes.Get("/help", func(ctx iris.Context) {
+		ctx.Writef("POST / -- calculator helper\n")
+	})
 
 	app.Run(iris.Addr(":8080"), iris.WithCharset("UTF-8"), iris.WithoutVersionChecker, iris.WithoutServerError(iris.ErrServerClosed))
 }
